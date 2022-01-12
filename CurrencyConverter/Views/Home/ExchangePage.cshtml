@@ -1,0 +1,67 @@
+﻿@model CurrencyConverter.Models.ExchangeLog
+@{
+    ViewData["Title"] = "ExchangePage";
+}
+<h1>EXCHANGCE RATE PAGE</h1>
+<hr>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="~/css/site.css" rel="stylesheet" />
+
+<form id="productForm">
+
+    <select required asp-for="ConvertFrom" style="padding:7px; width:300px" id="ConvertFrom" asp-items="@ViewBag.fromCountry">
+        <option value="">Select Category</option>
+    </select>
+
+    <select required id="ConvertToCountry" asp-for="Rate" style="padding:7px; width:300px"  asp-items="@ViewBag.country">
+        <option value="">Select Category</option>
+    </select>
+
+    <br />
+    <br />
+
+    <input type="hidden" asp-for="ConvertTo" />
+
+    <input required asp-for="InputValue" style="padding:5px;  width:300px" value="1" placeholder="Enter the amount" />
+    <input required asp-for="ConvertedValue" style="padding:5px;  width:300px" placeholder="" />
+
+    <br />
+    <br />
+
+    <button id="Save" type="submit">Save</button>
+
+</form>
+
+<script>
+    
+
+    firstValue = $('#ConvertToCountry1 option:nth-child(2)').val();
+    $("#ConvertFrom").val("Euro")
+    $("#ConvertToCountry").val(firstValue)
+
+    $("#ConvertToCountry,#InputValue").on("change", function () {
+        var input = $("#InputValue").val()
+        var ctryRate = $("#ConvertToCountry").val();
+        var convertedToCountry = $("#ConvertToCountry option:selected").text();
+        var amt = input * ctryRate
+        $("#ConvertedValue").val(amt)
+        $("#ConvertTo").val(convertedToCountry);
+       
+    })
+
+    $("#Save").on('click', function () {
+        debugger;
+        data = $("#productForm").serializeArray();
+            $.ajax({
+                type: "POST",
+                url: "/Home/Save",
+                dataType: 'json',
+                data: data,
+                success: function () {
+                   
+                },
+            });
+    })
+   
+</script>
